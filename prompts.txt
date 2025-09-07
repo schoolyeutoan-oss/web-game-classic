@@ -1,0 +1,315 @@
+Hãy thiết kế một trang web game hub 5 trang với chủ đề arcade retro cyberpunk neon. Website này cho phép người dùng chơi 3 game cổ điển: Tetris, Snake, Minesweeper. Giao diện phải cực kỳ nổi bật, sử dụng màu sắc neon rực rỡ, có hiệu ứng nhấp nháy liên tục, cùng chuyển cảnh mượt mà.
+
+🌌 Tổng quan trải nghiệm (UX)
+
+Người dùng khi truy cập trang web sẽ có cảm giác như đang bước vào một phòng game arcade neon trong tương lai.
+
+Mọi phần tử UI (nút bấm, card, icon, text) đều có hiệu ứng phát sáng neon nhiều màu.
+
+Nền website là gradient tối (đen + tím + xanh đậm) với hiệu ứng động như grid neon 3D hoặc particle glowing.
+
+Âm thanh nền nhẹ (tùy chọn, có thể tắt/mở) theo phong cách synthwave retro.
+
+🖥️ Cấu trúc website (5 trang)
+1️⃣ Trang Chủ (Home Page)
+
+Tiêu đề chính: chữ neon “🎮 Retro Cyber Game Hub” ở giữa màn hình.
+
+Hiệu ứng: chữ nhấp nháy nhẹ theo nhịp, phát sáng xanh tím.
+
+Menu chọn game (ở trung tâm): 3 card lớn theo hàng ngang hoặc grid.
+
+Card 1: Tetris (icon là khối gạch pixel neon nhiều màu).
+
+Card 2: Snake (icon là con rắn pixel neon uốn lượn).
+
+Card 3: Minesweeper (icon là quả bom neon đỏ).
+
+Hover effect:
+
+Card phóng to nhẹ (scale-up).
+
+Border neon đổi màu liên tục (gradient animation).
+
+Icon nhấp nháy.
+
+Phần giới thiệu ở cuối trang:
+
+Text: “Đây là hub chơi game cổ điển với giao diện cyberpunk rực rỡ. Hãy chọn một trò chơi để bắt đầu!”
+
+Hiệu ứng: text có animation typing effect (gõ từ từ) + viền sáng chạy quanh khung chữ.
+
+Footer:
+
+Có nút “Liên hệ” dẫn đến trang Contact.
+
+2️⃣ Trang Liên Hệ (Contact Page)
+
+Tiêu đề neon: “📩 Liên hệ với tôi”
+
+Bố cục 3 icon mạng xã hội (TikTok, Facebook, Instagram) đặt giữa màn hình.
+
+Icon hiển thị trong vòng tròn neon nhiều màu.
+
+Hover effect: icon phát sáng mạnh hơn, rung nhẹ, đổi màu liên tục.
+
+Khi click → mở link cá nhân.
+
+Background phụ trợ: hiệu ứng lưới neon động + các hạt sáng bay chậm.
+
+Nút Quay lại Trang chủ (ở góc trái trên): nút neon xanh lá, hover rung + sáng mạnh hơn.
+
+3️⃣ Trang Game Tetris
+
+Khung game:
+
+Nằm giữa màn hình, bo viền neon xanh dương.
+
+Các khối gạch (tetromino) có màu neon khác nhau (xanh, đỏ, vàng, tím, cam).
+
+Thông tin bên cạnh:
+
+Score (điểm số) hiển thị bằng chữ neon vàng, phát sáng liên tục.
+
+Nút “Restart” neon nhỏ ở cạnh score.
+
+Nút Quay lại Trang chủ: góc trên trái.
+
+Gameplay:
+
+Người chơi dùng phím mũi tên để xoay và di chuyển khối.
+
+Khi hàng ngang đầy → biến mất với hiệu ứng sáng chớp.
+
+Có âm thanh nhẹ khi khối rơi.
+
+4️⃣ Trang Game Snake
+
+Khung game: nền là grid neon xanh đậm.
+
+Con rắn:
+
+Hiệu ứng pixel neon, thân phát sáng (gradient đổi màu khi dài ra).
+
+Di chuyển mượt, có hiệu ứng trail ánh sáng mờ.
+
+Mồi:
+
+Hiển thị như một chấm neon rực rỡ, đổi màu sau mỗi lần ăn.
+
+Score:
+
+Góc phải trên, chữ neon hồng.
+
+Gameplay:
+
+Điều khiển bằng phím mũi tên.
+
+Khi rắn ăn mồi → phát hiệu ứng sáng bùng.
+
+Nút Quay lại Trang chủ: góc trên trái.
+
+5️⃣ Trang Game Minesweeper
+
+Bàn chơi:
+
+Grid pixel neon.
+
+Ô chưa mở → màu xám neon nhẹ.
+
+Ô mở có số → số hiển thị neon nhiều màu (1 xanh, 2 vàng, 3 đỏ...).
+
+Ô bom → icon quả bom neon đỏ nhấp nháy.
+
+Gameplay:
+
+Click trái để mở ô.
+
+Click phải để cắm cờ (cờ neon đỏ).
+
+Thua → màn hình rung + bom nổ phát sáng.
+
+Nút Restart: neon xanh lá.
+
+Nút Quay lại Trang chủ: góc trên trái.
+
+🌈 Yêu cầu hiệu ứng (UI/Animation)
+
+Chuyển trang:
+
+Dùng hiệu ứng fade + glow.
+
+Mỗi lần đổi trang → background chuyển màu neon gradient chậm.
+
+Hover effect chung:
+
+Tất cả nút, card, icon đều phóng to nhẹ khi hover + phát sáng mạnh hơn.
+
+Background động:
+
+Có thể là grid neon chuyển động chậm, hoặc particle glowing bay nhẹ.
+
+Text neon:
+
+Nhấp nháy nhẹ, rung nhỏ theo nhịp (retro arcade feel).
+
+⚙️ Yêu cầu kỹ thuật
+
+Responsive full-screen cho desktop + mobile.
+
+Tải nhanh, mượt, không lag khi chơi game.
+
+Game chơi được hoàn chỉnh (không chỉ hiển thị hình).
+
+Có thể mở rộng thêm game khác trong tương lai.
+Hãy sửa 2 lỗi trong website game hub như sau, giữ nguyên giao diện neon, hiệu ứng chuyển cảnh và layout tổng thể:
+
+1️⃣ Lỗi trong Game Tetris
+
+Lỗi hiện tại: Khi người dùng bấm nút Restart, game không khởi động lại, bàn chơi và score bị treo.
+
+Yêu cầu sửa:
+
+Khi bấm Restart, cần:
+
+Xóa toàn bộ các khối đang tồn tại trên bảng.
+
+Reset lại score = 0.
+
+Reset biến trạng thái (current piece, next piece, board array).
+
+Khởi động lại vòng lặp game (game loop).
+
+Có thể viết lại nút Restart như sau (pseudo code):
+
+function restartTetris() {
+    stopGameLoop();              // Dừng vòng lặp hiện tại
+    clearBoard();                // Xóa toàn bộ khối trên bảng
+    resetScore();                // Score = 0
+    generateNewPiece();          // Sinh khối mới
+    startGameLoop();             // Chạy lại game từ đầu
+}
+
+2️⃣ Lỗi trong Game Snake (Rắn săn mồi)
+
+Lỗi hiện tại: Mồi (food) đôi khi xuất hiện ngoài phạm vi khu vực chơi, khiến user không thể ăn.
+
+Yêu cầu sửa:
+
+Tọa độ mồi phải luôn nằm trong lưới (grid).
+
+Tọa độ mồi phải tính theo bội số của kích thước ô (cell size).
+
+Ví dụ: nếu khung chơi là width = 300px, height = 300px và cell size = 20px, thì mồi phải spawn tại tọa độ (x, y) với:
+
+x = random từ 0 đến (width / cellSize - 1) * cellSize
+y = random từ 0 đến (height / cellSize - 1) * cellSize
+
+
+Ngoài ra, đảm bảo mồi không spawn chồng lên thân rắn.
+
+Pseudo code sửa random food:
+
+function generateFood() {
+    let foodX, foodY;
+    do {
+        foodX = Math.floor(Math.random() * (boardWidth / cellSize)) * cellSize;
+        foodY = Math.floor(Math.random() * (boardHeight / cellSize)) * cellSize;
+    } while (snake.some(segment => segment.x === foodX && segment.y === foodY));
+    
+    food = { x: foodX, y: foodY };
+}
+
+
+👉 Chỉ sửa đúng 2 lỗi trên, giữ nguyên toàn bộ thiết kế neon và hiệu ứng.
+Hãy sửa 2 lỗi trong website game hub như sau, giữ nguyên giao diện neon, hiệu ứng chuyển cảnh và layout tổng thể:
+
+1️⃣ Lỗi trong Game Tetris
+
+Lỗi hiện tại: Khi người dùng bấm nút Restart, game không khởi động lại, bàn chơi và score bị treo.
+
+Yêu cầu sửa:
+
+Khi bấm Restart, cần:
+
+Xóa toàn bộ các khối đang tồn tại trên bảng.
+
+Reset lại score = 0.
+
+Reset biến trạng thái (current piece, next piece, board array).
+
+Khởi động lại vòng lặp game (game loop).
+
+Có thể viết lại nút Restart như sau (pseudo code):
+
+function restartTetris() {
+    stopGameLoop();              // Dừng vòng lặp hiện tại
+    clearBoard();                // Xóa toàn bộ khối trên bảng
+    resetScore();                // Score = 0
+    generateNewPiece();          // Sinh khối mới
+    startGameLoop();             // Chạy lại game từ đầu
+}
+
+2️⃣ Lỗi trong Game Snake (Rắn săn mồi)
+
+Lỗi hiện tại: Mồi (food) đôi khi xuất hiện ngoài phạm vi khu vực chơi, khiến user không thể ăn.
+
+Yêu cầu sửa:
+
+Tọa độ mồi phải luôn nằm trong lưới (grid).
+
+Tọa độ mồi phải tính theo bội số của kích thước ô (cell size).
+
+Ví dụ: nếu khung chơi là width = 300px, height = 300px và cell size = 20px, thì mồi phải spawn tại tọa độ (x, y) với:
+
+x = random từ 0 đến (width / cellSize - 1) * cellSize
+y = random từ 0 đến (height / cellSize - 1) * cellSize
+
+
+Ngoài ra, đảm bảo mồi không spawn chồng lên thân rắn.
+
+Pseudo code sửa random food:
+
+function generateFood() {
+    let foodX, foodY;
+    do {
+        foodX = Math.floor(Math.random() * (boardWidth / cellSize)) * cellSize;
+        foodY = Math.floor(Math.random() * (boardHeight / cellSize)) * cellSize;
+    } while (snake.some(segment => segment.x === foodX && segment.y === foodY));
+    
+    food = { x: foodX, y: foodY };
+}
+
+
+👉 Chỉ sửa đúng 2 lỗi trên, giữ nguyên toàn bộ thiết kế neon và hiệu ứng.
+**Vai trò:** Bạn là một lập trình viên web chuyên nghiệp, giỏi JavaScript và HTML5 game.  
+**Nhiệm vụ:** Tạo lại một file `tetris.html` mới, giữ nguyên toàn bộ giao diện hiện tại của dự án (màu sắc neon, font pixel, bố cục Retro như file cũ), nhưng viết lại hoàn toàn **logic game Tetris** để game không còn lỗi.
+
+**Yêu cầu chi tiết:**
+1. **HTML & CSS:**  
+   - Giữ nguyên giao diện như cũ (bố cục Retro Cyber Hub, font chữ pixel, màu sắc neon, khung trò chơi).  
+   - Giữ nguyên style chung của project (CSS liên kết từ file ngoài hoặc inline).  
+   - Giao diện vẫn có nút chọn trò chơi và hiển thị tên game "Tetris".
+
+2. **JavaScript:**  
+   - Viết lại logic game Tetris:
+     - Có các khối (Tetromino) chuẩn: I, O, T, L, J, S, Z.
+     - Khối rơi theo thời gian, có thể di chuyển trái, phải, xoay.
+     - Khi hàng đầy thì hàng biến mất và cộng điểm.
+     - Game kết thúc khi khối chạm trần.
+   - Đảm bảo code sạch, dễ đọc, không lỗi logic.
+   - Tách biệt rõ HTML, CSS, JS (có thể viết `<script>` ngay trong `tetris.html`).
+
+3. **Tương thích:**  
+   - Chạy tốt trên trình duyệt Chrome/Edge/Firefox.
+   - Không cần backend.
+
+**Output mong muốn:**  
+- Xuất ra toàn bộ nội dung file `tetris.html` mới, sẵn sàng thay thế file cũ.
+Hãy tạo lại hoàn toàn file terris.html mới để sửa lỗi logic, 
+nhưng giữ nguyên giao diện cũ của trang web. 
+Đảm bảo vẫn load được CSS và JavaScript như trước.
+
+Hãy tạo lại hoàn toàn file terris.html mới để sửa lỗi logic, 
+nhưng giữ nguyên giao diện cũ của trang web. 
+Đảm bảo vẫn load được CSS và JavaScript như trước.

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Retro Cyber Game Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            overflow-x: hidden;
+        }
+        .neon-text {
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff00de, 0 0 20px #ff00de;
+            animation: flicker 1.5s infinite alternate;
+            font-family: 'Press Start 2P', cursive;
+        }
+        .neon-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px currentColor;
+            cursor: pointer;
+        }
+        .neon-circle:hover {
+            transform: scale(1.3); /* tăng kích thước khi hover */
+            box-shadow: 0 0 15px currentColor,
+                        0 0 30px currentColor,
+                        0 0 60px currentColor,
+                        0 0 120px currentColor; /* glow neon mạnh */
+            transition: all 0.4s ease; /* chuyển động mượt */
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            border: 2px solid #00ff9d;
+            color: #00ff9d;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-family: 'Press Start 2P', cursive;
+        }
+        .back-btn:hover {
+            background: #00ff9d;
+            color: #000;
+            box-shadow: 0 0 20px #00ff9d;
+        }
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff00de, 0 0 20px #ff00de;
+            }
+            20%, 24%, 55% {
+                text-shadow: none;
+            }
+        }
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+            animation: float 15s infinite linear;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10%, 90% { opacity: 1; }
+            100% { transform: translateY(-1000px) translateX(1000px); opacity: 0; }
+        }
+        a svg {
+            pointer-events: none !important;
+        }
+        p {
+            font-family: 'Press Start 2P', cursive;
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    <a href="index.html" class="back-btn">
+        <i data-feather="arrow-left" class="inline"></i> Back
+    </a>
+
+    <div class="container mx-auto px-4 py-32 flex flex-col items-center justify-center min-h-screen">
+        <h1 class="neon-text text-4xl md:text-6xl text-center mb-20" data-aos="fade-down">📩 Contact with School</h1>
+        <div class="flex flex-wrap justify-center gap-10 max-w-4xl">
+            <!-- TikTok -->
+            <div class="text-center" data-aos="fade-up" data-aos-delay="100">
+                <a href="https://www.tiktok.com/@luonggzkl78" target="_blank" rel="noopener noreferrer" class="neon-circle text-pink-400 mx-auto flex items-center justify-center">
+                    <i data-feather="music" class="w-10 h-10 pointer-events-none" stroke-width="1.5"></i>
+                </a>
+                <p class="mt-4 text-pink-400">TikTok</p>
+            </div>
+            <!-- Facebook -->
+            <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+                <a href="https://www.facebook.com/hai.ut.186" target="_blank" rel="noopener noreferrer" class="neon-circle text-blue-400 mx-auto flex items-center justify-center">
+                    <i data-feather="facebook" class="w-10 h-10 pointer-events-none" stroke-width="1.5"></i>
+                </a>
+                <p class="mt-4 text-blue-400">Facebook</p>
+            </div>
+            <!-- Instagram -->
+            <div class="text-center" data-aos="fade-up" data-aos-delay="300">
+                <a href="https://www.instagram.com/schoolday19" target="_blank" rel="noopener noreferrer" class="neon-circle text-purple-400 mx-auto flex items-center justify-center">
+                    <i data-feather="instagram" class="w-10 h-10 pointer-events-none" stroke-width="1.5"></i>
+                </a>
+                <p class="mt-4 text-purple-400">Instagram</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        AOS.init({ duration: 1000, once: true });
+        feather.replace();
+
+        // Create floating particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.animationDelay = `${Math.random() * 15}s`;
+            particle.style.animationDuration = `${10 + Math.random() * 10}s`;
+            particlesContainer.appendChild(particle);
+        }
+
+        // Add hover effects to social icons using GSAP
+        const colors = {
+    'music': '#ff2fff',
+    'facebook': '#3b5998',
+    'instagram': '#c13584'
+};
+
+document.querySelectorAll('.neon-circle i').forEach(icon => {
+    const el = icon.parentElement;
+    const name = icon.getAttribute('data-feather');
+    el.addEventListener('mouseenter', () => {
+        gsap.to(el, { 
+            scale: 1.3,
+            boxShadow: `0 0 15px ${colors[name]}, 0 0 30px ${colors[name]}, 0 0 60px ${colors[name]}, 0 0 120px ${colors[name]}`,
+            duration: 0.4
+        });
+    });
+    el.addEventListener('mouseleave', () => {
+        gsap.to(el, { 
+            scale: 1,
+            boxShadow: `0 0 5px ${colors[name]}, 0 0 10px ${colors[name]}, 0 0 20px ${colors[name]}, 0 0 40px ${colors[name]}`,
+            duration: 0.4
+        });
+    });
+});
+
+    </script>
+</body>
+</html>

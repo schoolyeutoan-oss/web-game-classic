@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris - Retro Cyber Game Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            overflow-x: hidden;
+        }
+        .neon-text {
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff00de, 0 0 20px #ff00de;
+            animation: flicker 1.5s infinite alternate;
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            border: 2px solid #00ff9d;
+            color: #00ff9d;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover {
+            background: #00ff9d;
+            color: #000;
+            box-shadow: 0 0 20px #00ff9d;
+        }
+        .game-container {
+            border: 4px solid #00fffc;
+            box-shadow: 0 0 20px #00fffc;
+        }
+        .score-display {
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff0;
+            color: #ff0;
+            font-size: 24px;
+        }
+        .restart-btn {
+            border: 2px solid #ff00de;
+            color: #ff00de;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .restart-btn:hover {
+            background: #ff00de;
+            color: #000;
+            box-shadow: 0 0 20px #ff00de;
+        }
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff00de, 0 0 20px #ff00de;
+            }
+            20%, 24%, 55% {
+                text-shadow: none;
+            }
+        }
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(48, 43, 99, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(48, 43, 99, 0.3) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        #tetris-board {
+            box-sizing: border-box;
+        }
+        #tetris-board > div {
+            box-sizing: border-box;
+        }
+        .block-i { background-color: #00f0ff; box-shadow: 0 0 10px #00f0ff; }
+        .block-j { background-color: #0000ff; box-shadow: 0 0 10px #0000ff; }
+        .block-l { background-color: #ff7f00; box-shadow: 0 0 10px #ff7f00; }
+        .block-o { background-color: #ffff00; box-shadow: 0 0 10px #ffff00; }
+        .block-s { background-color: #00ff00; box-shadow: 0 0 10px #00ff00; }
+        .block-t { background-color: #ff00ff; box-shadow: 0 0 10px #ff00ff; }
+        .block-z { background-color: #ff0000; box-shadow: 0 0 10px #ff0000; }
+    </style>
+</head>
+<body class="grid-bg">
+    <a href="index.html" class="back-btn">
+        <i data-feather="arrow-left" class="inline"></i> Back
+    </a>
+    
+    <div class="container mx-auto px-4 py-20 flex flex-col items-center justify-center min-h-screen">
+        <h1 class="neon-text text-4xl md:text-6xl text-center mb-10">TETRIS</h1>
+        
+        <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="game-container bg-black bg-opacity-70" id="tetris-board"></div>
+            
+            <div class="flex flex-col items-center gap-6">
+                <div class="score-display text-center">
+                    <p>SCORE:</p>
+                    <p id="score">0</p>
+                </div>
+                
+                <button class="restart-btn" id="restart-btn">
+                    <i data-feather="refresh-cw" class="inline"></i> Restart
+                </button>
+                
+                <div class="text-sm text-center max-w-xs">
+                    <p class="mb-2">CONTROLS:</p>
+                    <p>← → : Move</p>
+                    <p>↑ : Rotate</p>
+                    <p>↓ : Speed up</p>
+                    <p>Space : Hard drop</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        AOS.init();
+        feather.replace();
+        
+        // Tetris Game
+        document.addEventListener('DOMContentLoaded', () => {
+            const boardWidth = 10;
+            const boardHeight = 20;
+            let score = 0;
+            let gameOver = false;
+            let timerId;
+            let currentPosition = [];
+            let currentPiece = [];
+            let nextPiece = [];
+            
+            // Create board
+            const board = Array(boardHeight).fill().map(() => Array(boardWidth).fill(0));
+            const boardElement = document.getElementById('tetris-board');
+            
+            boardElement.style.display = 'grid';
+            boardElement.style.gridTemplateColumns = `repeat(${boardWidth}, 24px)`; // dùng px thay vì 1fr để ô khớp tuyệt đối
+            boardElement.classList.add('border-4', 'border-cyan-400');
+            // Create cells
+            for (let y = 0; y < boardHeight; y++) {
+                for (let x = 0; x < boardWidth; x++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('w-6', 'h-6', 'border', 'bg-black');
+                    cell.style.boxSizing = "border-box";
+                    cell.setAttribute('data-x', x);
+                    cell.setAttribute('data-y', y);
+                    boardElement.appendChild(cell);
+                }
+            }
+            
+            
+            // Tetrominoes
+            const pieces = [
+                { shape: [[1,1,1,1]], className: 'block-i' }, // I
+                { shape: [[1,0,0],[1,1,1]], className: 'block-j' }, // J
+                { shape: [[0,0,1],[1,1,1]], className: 'block-l' }, // L
+                { shape: [[1,1],[1,1]], className: 'block-o' }, // O
+                { shape: [[0,1,1],[1,1,0]], className: 'block-s' }, // S
+                { shape: [[0,1,0],[1,1,1]], className: 'block-t' }, // T
+                { shape: [[1,1,0],[0,1,1]], className: 'block-z' }  // Z
+            ];
+            
+            // Generate random piece
+            function randomPiece() {
+                const randomIndex = Math.floor(Math.random() * pieces.length);
+                return pieces[randomIndex];
+            }
+            
+            // Draw piece on board
+            function drawPiece() {
+                currentPiece.shape.forEach((row, y) => {
+                    row.forEach((value, x) => {
+                        if (value) {
+                            const cellX = currentPosition[0] + x;
+                            const cellY = currentPosition[1] + y;
+                            if (cellY >= 0) {
+                                const cell = document.querySelector(`[data-x="${cellX}"][data-y="${cellY}"]`);
+                                cell.classList.add(currentPiece.className);
+                            }
+                        }
+                    });
+                });
+            }
+            
+            // Undraw piece from board
+            function undrawPiece() {
+                currentPiece.shape.forEach((row, y) => {
+                    row.forEach((value, x) => {
+                        if (value) {
+                            const cellX = currentPosition[0] + x;
+                            const cellY = currentPosition[1] + y;
+                            if (cellY >= 0) {
+                                const cell = document.querySelector(`[data-x="${cellX}"][data-y="${cellY}"]`);
+                                cell.className = 'w-6 h-6 border border-gray-800';
+                            }
+                        }
+                    });
+                });
+            }
+            
+            // Initialize game
+            function initGame() {
+                score = 0;
+                document.getElementById('score').textContent = score;
+                gameOver = false;
+                board.forEach(row => row.fill(0));
+                currentPosition = [];
+                currentPiece = [];
+                nextPiece = [];
+                
+                // Clear all cells
+                document.querySelectorAll('#tetris-board > div').forEach(cell => {
+                    cell.className = 'w-6 h-6 border border-gray-800';
+                });
+                
+                // Create first piece
+                currentPiece = randomPiece();
+                currentPiece.shape = currentPiece.shape.map(row => [...row]);
+                currentPiece.className = currentPiece.className;
+                currentPosition = [Math.floor(boardWidth / 2) - Math.floor(currentPiece.shape[0].length / 2), 0];
+                
+                // Start game loop
+                if (timerId) clearInterval(timerId);
+                timerId = setInterval(moveDown, 1000);
+                
+                drawPiece();
+            }
+            
+            // Move piece down
+            function moveDown() {
+                undrawPiece();
+                currentPosition[1]++;
+                if (checkCollision()) {
+                    currentPosition[1]--;
+                    lockPiece(); // lock xong thì lockPiece sẽ tự kiểm tra game over
+                    drawPiece();
+                    return;
+                }
+                drawPiece();
+            }
+
+            
+            // Check for collision
+            function checkCollision() {
+                for (let y = 0; y < currentPiece.shape.length; y++) {
+                    for (let x = 0; x < currentPiece.shape[y].length; x++) {
+                        if (currentPiece.shape[y][x]) {
+                            const cellX = currentPosition[0] + x;
+                            const cellY = currentPosition[1] + y;
+                            
+                            // Check boundaries
+                            if (cellX < 0 || cellX >= boardWidth || cellY >= boardHeight) {
+                                return true;
+                            }
+                            
+                            // Check for locked pieces
+                            if (cellY >= 0 && board[cellY][cellX]) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
+            
+            // Lock piece in place
+            function lockPiece() {
+                currentPiece.shape.forEach((row, y) => {
+                    row.forEach((value, x) => {
+                        if (value) {
+                            const cellX = currentPosition[0] + x;
+                            const cellY = currentPosition[1] + y;
+                            if (cellY >= 0) {
+                                board[cellY][cellX] = currentPiece.className;
+                                const cell = document.querySelector(`[data-x="${cellX}"][data-y="${cellY}"]`);
+                                cell.classList.add(currentPiece.className);
+                                cell.classList.add('opacity-100');
+                            }
+                        }
+                    });
+                });
+                
+                // Check for completed rows
+                checkRows();
+                
+                // Get new piece
+                currentPiece = randomPiece();
+                currentPiece.shape = currentPiece.shape.map(row => [...row]);
+                currentPiece.className = currentPiece.className;
+                currentPosition = [Math.floor(boardWidth / 2) - Math.floor(currentPiece.shape[0].length / 2), 0];
+                
+                // Check if game over
+                if (checkCollision() && currentPosition[1] === 0) {
+                    gameOver = true;
+                    clearInterval(timerId);
+                    alert('Game Over!');
+                }
+            }
+            
+            // Check for completed rows
+            function checkRows() {
+                let rowsCleared = 0;
+                
+                for (let y = boardHeight - 1; y >= 0; y--) {
+                    if (board[y].every(cell => cell)) {
+                        // Clear the row
+                        rowsCleared++;
+                        
+                        // Move all rows above down
+                        for (let y2 = y; y2 > 0; y2--) {
+                            board[y2] = [...board[y2 - 1]];
+                        }
+                        board[0] = Array(boardWidth).fill(0);
+                        
+                        // Redraw the board
+                        redrawBoard();
+                        
+                        // Check the same row again since we moved everything down
+                        y++;
+                    }
+                }
+                
+                if (rowsCleared > 0) {
+                    // Update score
+                    score += rowsCleared * 100;
+                    document.getElementById('score').textContent = score;
+                    
+                    // Speed up game
+                    clearInterval(timerId);
+                    const newSpeed = Math.max(100, 1000 - (score / 10));
+                    timerId = setInterval(moveDown, newSpeed);
+                }
+            }
+            
+            // Redraw the entire board
+            function redrawBoard() {
+                for (let y = 0; y < boardHeight; y++) {
+                    for (let x = 0; x < boardWidth; x++) {
+                        const cell = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+                        cell.className = 'w-6 h-6 border border-gray-800';
+                        
+                        if (board[y][x] !== 0) {
+                            // Find the color of the locked piece (simplified for this example)
+                            cell.classList.add(board[y][x]);
+                        }
+                    }
+                }
+            }
+            
+            // Rotate piece
+            function rotate() {
+                undrawPiece();
+                const rotated = [];
+                
+                // Transpose matrix
+                for (let x = 0; x < currentPiece.shape[0].length; x++) {
+                    const newRow = [];
+                    for (let y = currentPiece.shape.length - 1; y >= 0; y--) {
+                        newRow.push(currentPiece.shape[y][x]);
+                    }
+                    rotated.push(newRow);
+                }
+                
+                const originalShape = currentPiece.shape;
+                currentPiece.shape = rotated;
+                
+                if (checkCollision()) {
+                    currentPiece.shape = originalShape;
+                }
+                
+                drawPiece();
+            }
+            
+            // Move piece left
+            function moveLeft() {
+                undrawPiece();
+                currentPosition[0]--;
+                if (checkCollision()) {
+                    currentPosition[0]++;
+                }
+                drawPiece();
+            }
+            
+            // Move piece right
+            function moveRight() {
+                undrawPiece();
+                currentPosition[0]++;
+                if (checkCollision()) {
+                    currentPosition[0]--;
+                }
+                drawPiece();
+            }
+            
+            // Hard drop
+            function hardDrop() {
+                undrawPiece();
+                while (!checkCollision()) {
+                    currentPosition[1]++;
+                }
+                currentPosition[1]--;
+                lockPiece();
+                drawPiece();
+            }
+            
+            // Event listeners
+            document.addEventListener('keydown', e => {
+                if (gameOver) return;
+                
+                switch (e.key) {
+                    case 'ArrowLeft':
+                        moveLeft();
+                        break;
+                    case 'ArrowRight':
+                        moveRight();
+                        break;
+                    case 'ArrowDown':
+                        moveDown();
+                        break;
+                    case 'ArrowUp':
+                        rotate();
+                        break;
+                    case ' ':
+                        hardDrop();
+                        break;
+                }
+            });
+            
+            document.getElementById('restart-btn').addEventListener('click', initGame);
+            
+            // Start game
+            initGame();
+        });
+    </script>
+</body>
+</html>

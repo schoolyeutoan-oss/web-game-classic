@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retro Cyber Game Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            overflow-x: hidden;
+        }
+        .neon-text {
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff00de, 0 0 20px #ff00de;
+            animation: flicker 1.5s infinite alternate;
+        }
+        .neon-card {
+            border: 3px solid;
+            border-image: linear-gradient(45deg, #ff00de, #00fffc, #00ff9d) 1;
+            box-shadow: 0 0 10px #ff00de, 0 0 20px #00fffc, 0 0 30px #00ff9d;
+            transition: all 0.3s ease;
+        }
+        .neon-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #ff00de, 0 0 30px #00fffc, 0 0 40px #00ff9d;
+        }
+        .neon-btn {
+            border: 2px solid #00fffc;
+            box-shadow: 0 0 10px #00fffc;
+            color: #00fffc;
+            transition: all 0.3s ease;
+        }
+        .neon-btn:hover {
+            background: #00fffc;
+            color: #000;
+            box-shadow: 0 0 20px #00fffc;
+        }
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff00de, 0 0 20px #ff00de;
+            }
+            20%, 24%, 55% {
+                text-shadow: none;
+            }
+        }
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(48, 43, 99, 0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(48, 43, 99, 0.5) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: gridMove 50s linear infinite;
+        }
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 1000px 1000px; }
+        }
+    </style>
+</head>
+<body class="grid-bg min-h-screen">
+    <div class="container mx-auto px-4 py-12">
+        <h1 class="neon-text text-4xl md:text-6xl text-center mb-16" data-aos="fade-down">🎮 Retro Cyber Game Hub</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <!-- Tetris Card -->
+            <div class="neon-card p-6 rounded-lg bg-black bg-opacity-50" data-aos="fade-up" data-aos-delay="100">
+                <div class="text-center mb-4">
+                    <i data-feather="box" class="w-16 h-16 mx-auto text-purple-400" stroke-width="1.5"></i>
+                </div>
+                <h2 class="text-2xl text-center mb-4 text-purple-400">Tetris</h2>
+                <p class="text-sm mb-6 text-gray-300">Classic block-stacking game with neon twist</p>
+                <a href="tetris.html" class="neon-btn block text-center py-2 px-4 rounded font-bold">PLAY NOW</a>
+            </div>
+            
+            <!-- Snake Card -->
+            <div class="neon-card p-6 rounded-lg bg-black bg-opacity-50" data-aos="fade-up" data-aos-delay="200">
+                <div class="text-center mb-4">
+                    <i data-feather="zap" class="w-16 h-16 mx-auto text-green-400" stroke-width="1.5"></i>
+                </div>
+                <h2 class="text-2xl text-center mb-4 text-green-400">Snake</h2>
+                <p class="text-sm mb-6 text-gray-300">Guide the neon snake to grow longer</p>
+                <a href="snake.html" class="neon-btn block text-center py-2 px-4 rounded font-bold">PLAY NOW</a>
+            </div>
+            
+            <!-- Minesweeper Card -->
+            <div class="neon-card p-6 rounded-lg bg-black bg-opacity-50" data-aos="fade-up" data-aos-delay="300">
+                <div class="text-center mb-4">
+                    <i data-feather="alert-octagon" class="w-16 h-16 mx-auto text-red-400" stroke-width="1.5"></i>
+                </div>
+                <h2 class="text-2xl text-center mb-4 text-red-400">Minesweeper</h2>
+                <p class="text-sm mb-6 text-gray-300">Find the bombs without triggering them</p>
+                <a href="minesweeper.html" class="neon-btn block text-center py-2 px-4 rounded font-bold">PLAY NOW</a>
+            </div>
+        </div>
+        
+        <div class="max-w-3xl mx-auto mt-20 p-6 neon-card rounded-lg bg-black bg-opacity-50" data-aos="fade-up">
+            <p class="text-center text-lg" id="typing-text"></p>
+        </div>
+    </div>
+    
+    <footer class="py-8 text-center">
+        <a href="contact.html" class="neon-btn inline-block py-2 px-6 rounded font-bold">Contact</a>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+        feather.replace();
+        
+        // Typing effect
+        const text = "My first web game - this is web of NguyenTruong ";
+        let i = 0;
+        const typing = setInterval(() => {
+            document.getElementById('typing-text').textContent += text.charAt(i);
+            i++;
+            if (i > text.length) clearInterval(typing);
+        }, 50);
+        
+        // Add hover effects to all neon elements
+        document.querySelectorAll('.neon-card, .neon-btn').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                gsap.to(el, { scale: 1.02, duration: 0.3 });
+            });
+            el.addEventListener('mouseleave', () => {
+                gsap.to(el, { scale: 1, duration: 0.3 });
+            });
+        });
+    </script>
+</body>
+</html>

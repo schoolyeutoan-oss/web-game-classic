@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minesweeper - Retro Cyber Game Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            overflow-x: hidden;
+        }
+        .neon-text {
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff00de, 0 0 20px #ff00de;
+            animation: flicker 1.5s infinite alternate;
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            border: 2px solid #00ff9d;
+            color: #00ff9d;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover {
+            background: #00ff9d;
+            color: #000;
+            box-shadow: 0 0 20px #00ff9d;
+        }
+        .game-container {
+            border: 4px solid #ff00de;
+            box-shadow: 0 0 20px #ff00de;
+        }
+        .stats {
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #00fffc;
+            color: #00fffc;
+            font-size: 20px;
+        }
+        .restart-btn {
+            border: 2px solid #ff00de;
+            color: #ff00de;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .restart-btn:hover {
+            background: #ff00de;
+            color: #000;
+            box-shadow: 0 0 20px #ff00de;
+        }
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ff00de, 0 0 20px #ff00de;
+            }
+            20%, 24%, 55% {
+                text-shadow: none;
+            }
+        }
+        .cell {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+        .cell:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .revealed {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        .bomb {
+            background-color: rgba(255, 0, 0, 0.3);
+            animation: bombPulse 0.5s infinite alternate;
+        }
+        @keyframes bombPulse {
+            from { box-shadow: 0 0 5px rgba(255, 0, 0, 0.5); }
+            to { box-shadow: 0 0 15px rgba(255, 0, 0, 0.8); }
+        }
+        .flagged {
+            color: #ff0000;
+        }
+        .number-1 { color: #00fffc; }
+        .number-2 { color: #00ff9d; }
+        .number-3 { color: #ff00de; }
+        .number-4 { color: #9900ff; }
+        .number-5 { color: #ff9900; }
+        .number-6 { color: #ff0099; }
+        .number-7 { color: #00ff00; }
+        .number-8 { color: #ffff00; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-btn">
+        <i data-feather="arrow-left" class="inline"></i> Back
+    </a>
+    
+    <div class="container mx-auto px-4 py-20 flex flex-col items-center justify-center min-h-screen">
+        <h1 class="neon-text text-4xl md:text-6xl text-center mb-10">MINESWEEPER</h1>
+        
+        <div class="flex flex-col md:flex-row items-center gap-8">
+            <div class="game-container bg-black bg-opacity-70 p-4" id="minesweeper-board"></div>
+            
+            <div class="flex flex-col items-center gap-6">
+                <div class="stats text-center">
+                    <p>BOMBS: <span id="bomb-count">10</span></p>
+                    <p>FLAGS: <span id="flag-count">0</span></p>
+                </div>
+                
+                <button class="restart-btn" id="restart-btn">
+                    <i data-feather="refresh-cw" class="inline"></i> Restart
+                </button>
+                
+                <div class="text-sm text-center max-w-xs">
+                    <p class="mb-2">CONTROLS:</p>
+                    <p>Left Click: Reveal</p>
+                    <p>Right Click: Flag</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        AOS.init();
+        feather.replace();
+        
+        // Minesweeper Game
+        document.addEventListener('DOMContentLoaded', () => {
+            const gridSize = 10;
+            const bombCount = 10;
+            let board = [];
+            let revealed = [];
+            let flagged = [];
+            let gameOver = false;
+            
+            const boardElement = document.getElementById('minesweeper-board');
+            boardElement.style.display = 'grid';
+            boardElement.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+            boardElement.style.gap = '2px';
+            
+            // Initialize game
+            function initGame() {
+                board = Array(gridSize).fill().map(() => Array(gridSize).fill(0));
+                revealed = Array(gridSize).fill().map(() => Array(gridSize).fill(false));
+                flagged = Array(gridSize).fill().map(() => Array(gridSize).fill(false));
+                gameOver = false;
+                
+                document.getElementById('bomb-count').textContent = bombCount;
+                document.getElementById('flag-count').textContent = 0;
+                
+                // Clear board
+                boardElement.innerHTML = '';
+                
+                // Create cells
+                for (let y = 0; y < gridSize; y++) {
+                    for (let x = 0; x < gridSize; x++) {
+                        const cell = document.createElement('div');
+                        cell.classList.add('cell');
+                        cell.setAttribute('data-x', x);
+                        cell.setAttribute('data-y', y);
+                        
+                        cell.addEventListener('click', () => handleClick(x, y));
+                        cell.addEventListener('contextmenu', (e) => {
+                            e.preventDefault();
+                            handleRightClick(x, y);
+                        });
+                        
+                        boardElement.appendChild(cell);
+                    }
+                }
+                
+                // Place bombs
+                placeBombs();
+                
+                // Calculate numbers
+                calculateNumbers();
+            }
+            
+            // Place bombs randomly
+            function placeBombs() {
+                let bombsPlaced = 0;
+                
+                while (bombsPlaced < bombCount) {
+                    const x = Math.floor(Math.random() * gridSize);
+                    const y = Math.floor(Math.random() * gridSize);
+                    
+                    if (board[y][x] !== -1) {
+                        board[y][x] = -1; // -1 represents a bomb
+                        bombsPlaced++;
+                    }
+                }
+            }
+            
+            // Calculate numbers for each cell
+            function calculateNumbers() {
+                for (let y = 0; y < gridSize; y++) {
+                    for (let x = 0; x < gridSize; x++) {
+                        if (board[y][x] === -1) continue;
+                        
+                        let count = 0;
+                        
+                        // Check all 8 surrounding cells
+                        for (let dy = -1; dy <= 1; dy++) {
+                            for (let dx = -1; dx <= 1; dx++) {
+                                if (dy === 0 && dx === 0) continue;
+                                
+                                const ny = y + dy;
+                                const nx = x + dx;
+                                
+                                if (ny >= 0 && ny < gridSize && nx >= 0 && nx < gridSize && board[ny][nx] === -1) {
+                                    count++;
+                                }
+                            }
+                        }
+                        
+                        board[y][x] = count;
+                    }
+                }
+            }
+            
+            // Handle cell click
+            function handleClick(x, y) {
+                if (gameOver || revealed[y][x] || flagged[y][x]) return;
+                
+                // Reveal the cell
+                revealCell(x, y);
+                
+                // Check if bomb was clicked
+                if (board[y][x] === -1) {
+                    gameOver = true;
+                    revealAllBombs();
+                    alert('Game Over! You hit a bomb!');
+                    return;
+                }
+                
+                // Check for win
+                if (checkWin()) {
+                    gameOver = true;
+                    alert('Congratulations! You won!');
+                }
+            }
+            
+            // Handle right click (flag)
+            function handleRightClick(x, y) {
+                if (gameOver || revealed[y][x]) return;
+                
+                flagged[y][x] = !flagged[y][x];
+                updateCell(x, y);
+                
+                // Update flag count
+                const flagCount = flagged.flat().filter(Boolean).length;
+                document.getElementById('flag-count').textContent = flagCount;
+            }
+            
+            // Reveal a cell
+            function revealCell(x, y) {
+                if (revealed[y][x]) return;
+                
+                revealed[y][x] = true;
+                updateCell(x, y);
+                
+                // If it's an empty cell, reveal adjacent cells
+                if (board[y][x] === 0) {
+                    for (let dy = -1; dy <= 1; dy++) {
+                        for (let dx = -1; dx <= 1; dx++) {
+                            if (dy === 0 && dx === 0) continue;
+                            
+                            const ny = y + dy;
+                            const nx = x + dx;
+                            
+                            if (ny >= 0 && ny < gridSize && nx >= 0 && nx < gridSize && !revealed[ny][nx]) {
+                                revealCell(nx, ny);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Update cell display
+            function updateCell(x, y) {
+                const cell = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+                cell.className = 'cell';
+                
+                if (flagged[y][x]) {
+                    cell.classList.add('flagged');
+                    cell.innerHTML = '<i data-feather="flag"></i>';
+                    feather.replace();
+                    return;
+                }
+                
+                if (revealed[y][x]) {
+                    cell.classList.add('revealed');
+                    
+                    if (board[y][x] === -1) {
+                        cell.classList.add('bomb');
+                        cell.innerHTML = '<i data-feather="alert-octagon"></i>';
+                        feather.replace();
+                    } else if (board[y][x] > 0) {
+                        cell.classList.add(`number-${board[y][x]}`);
+                        cell.textContent = board[y][x];
+                    }
+                }
+            }
+            
+            // Reveal all bombs (when game is lost)
+            function revealAllBombs() {
+                for (let y = 0; y < gridSize; y++) {
+                    for (let x = 0; x < gridSize; x++) {
+                        if (board[y][x] === -1) {
+                            revealed[y][x] = true;
+                            updateCell(x, y);
+                        }
+                    }
+                }
+            }
+            
+            // Check if player has won
+            function checkWin() {
+                for (let y = 0; y < gridSize; y++) {
+                    for (let x = 0; x < gridSize; x++) {
+                        if (board[y][x] !== -1 && !revealed[y][x]) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+            
+            // Event listener for restart button
+            document.getElementById('restart-btn').addEventListener('click', initGame);
+            
+            // Start game
+            initGame();
+        });
+    </script>
+</body>
+</html>
